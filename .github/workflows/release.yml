@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ github.event.inputs.tag || github.ref_name }}
   cancel-in-progress: false
 
 env:
@@ -22,8 +22,9 @@ env:
 
 jobs:
   release:
+    name: Build, sign and publish
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     permissions:
       contents: write
     env:
@@ -35,21 +36,85 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          global-json-file: global.json
 
-      - name: Build, test and package
+      - name: Check version
         shell: pwsh
         run: |
-          $version = $env:TAG.TrimStart('v')
-          ./build/build.ps1 -Version $version
+          if ($env:TAG -notmatch '^v\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$') { throw "Invalid tag: $env:TAG" }
+
+      - name: Prepare signing certificate
+        shell: pwsh
+        env:
+          PFX_BASE64: ${{ secrets.SIGNING_PFX_BASE64 }}
+        run: |
+          if ([string]::IsNullOrEmpty($env:PFX_BASE64)) {
+            if (-not $env:TAG.Contains('-')) { throw 'SIGNING_PFX_BASE64 is missing: regular releases must be signed.' }
+            Write-Warning 'No signing certificate: prerelease will be unsigned.'
+            exit 0
+          }
+          $pfx = Join-Path $env:RUNNER_TEMP 'signing.pfx'
+          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:PFX_BASE64))
+          "PFX_PATH=$pfx" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Trust self-signed test certificate (runner only)
+        if: env.PFX_PATH != ''
+        shell: pwsh
+        env:
+          PFX_PASSWORD: ${{ secrets.SIGNING_PFX_PASSWORD }}
+        run: |
+          # A CA-issued certificate is trusted already. A self-signed test certificate is trusted
+          # only on this ephemeral runner, so the script's signature check can pass.
+          $cert = [Security.Cryptography.X509Certificates.X509Certificate2]::new($env:PFX_PATH, $env:PFX_PASSWORD)
+          if ($cert.Subject -ne $cert.Issuer) { exit 0 }
+          Write-Warning "Self-signed test certificate: $($cert.Subject). Replace it before a production release."
+          $public = [Security.Cryptography.X509Certificates.X509Certificate2]::new($cert.RawData)
+          foreach ($name in 'Root', 'TrustedPublisher') {
+            $store = [Security.Cryptography.X509Certificates.X509Store]::new($name, 'LocalMachine')
+            $store.Open('ReadWrite'); $store.Add($public); $store.Close()
+          }
+
+      - name: Build, test, sign and package
+        shell: pwsh
+        env:
+          PFX_PASSWORD: ${{ secrets.SIGNING_PFX_PASSWORD }}
+        run: |
+          $p = @{ Version = $env:TAG.TrimStart('v'); OutputDir = 'artifacts/release' }
+          if ($env:PFX_PATH) {
+            $p.PfxPath = $env:PFX_PATH
+            $p.PfxPassword = ConvertTo-SecureString $env:PFX_PASSWORD -AsPlainText -Force
+          }
+          ./build/Build-Release.ps1 @p
+
+      - name: Remove signing certificate
+        if: always()
+        shell: pwsh
+        run: |
+          if ($env:PFX_PATH) { Remove-Item $env:PFX_PATH -Force -ErrorAction SilentlyContinue }
 
       - name: Create GitHub release
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $assets = @(Get-ChildItem artifacts/releases -File | ForEach-Object FullName)
-          $assets += @(Get-ChildItem artifacts/*-portable.zip | ForEach-Object FullName)
+          # Case-sensitive (-cmatch): Velopack's AzdoMcp-win-Portable.zip must not match '-portable\.zip'.
+          $filter = '\.(nupkg|json)$|^AzdoMcp-win-Setup\.exe$|^AzdoMcp-.+-portable\.zip$|^AzdoMcp-Handbuch-.+\.pdf$|^RELEASES$|^SHA256SUMS\.txt$'
+          $files = @(Get-ChildItem artifacts/release -File | Where-Object { $_.Name -cmatch $filter })
+          $names = @($files | ForEach-Object Name)
+          $required = [ordered]@{
+            'setup AzdoMcp-win-Setup.exe'        = '^AzdoMcp-win-Setup\.exe$'
+            'portable zip AzdoMcp-<v>-portable.zip' = '^AzdoMcp-.+-portable\.zip$'
+            'manual AzdoMcp-Handbuch-<v>.pdf'    = '^AzdoMcp-Handbuch-.+\.pdf$'
+            'checksums SHA256SUMS.txt'           = '^SHA256SUMS\.txt$'
+            'full package *-full.nupkg'          = '-full\.nupkg$'
+            'RELEASES'                           = '^RELEASES$'
+            'releases.win.json'                  = '^releases\.win\.json$'
+            'assets.win.json'                    = '^assets\.win\.json$'
+          }
+          foreach ($entry in $required.GetEnumerator()) {
+            if (-not ($names -cmatch $entry.Value)) { throw "Mandatory asset missing in artifacts/release: $($entry.Key)" }
+          }
+          $assets = @($files | ForEach-Object FullName)
           $flags = @('--generate-notes', '--verify-tag')
           if ($env:TAG.Contains('-')) { $flags += '--prerelease' }
           gh release create $env:TAG @assets --title "AzDO MCP Manager $env:TAG" @flags
