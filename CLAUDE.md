@@ -33,6 +33,11 @@ that manages connections/PATs, tool permissions and approvals. Windows only.
 | `tests/AzdoMcp.Tests` | xUnit v3, runs as an executable, fakes for HTTP and DPAPI |
 | `openspec/` | specs and changes (spec-driven); read before changing behaviour |
 | `docs/ui-proposal/` | UI artboards (German texts are authoritative) |
+| `build/` | `Build-Release.ps1` (release), `Build-Manual.ps1` + `ManualBuilder/` (manual, not in `AzdoMcp.sln`) |
+| `docs/manual/` | user manual (German, Sie-Form, Swiss spelling), `images/` rendered from the artboards |
+| `docs/assets/` | README images |
+| `docs/entwicklung.md` | developer docs: build, tests, release, workflows |
+| `tools/` | dev-only Node tools (`render-images.mjs`, Playwright); not in CI |
 
 ## Commands
 
@@ -40,6 +45,9 @@ that manages connections/PATs, tool permissions and approvals. Windows only.
 dotnet build AzdoMcp.sln
 dotnet run --project tests/AzdoMcp.Tests          # all tests
 openspec validate --all --strict
+pwsh ./build/Build-Manual.ps1 -SkipPdf            # manual as HTML -> artifacts/manual
+./build/Build-Release.ps1 -Version x.y.z          # release build -> artifacts/release (Windows)
+node tools/render-images.mjs                      # re-render manual/README images (npm install --prefix tools)
 ```
 
 From WSL use the Windows SDK: `/mnt/c/Users/<user>/AppData/Local/Microsoft/dotnet/dotnet.exe`.

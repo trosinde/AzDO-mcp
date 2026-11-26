@@ -10,3 +10,6 @@ TestResults/
 # never commit configs with secrets
 config.json
 *.pat
+
+# dev-only tools (tools/package.json)
+node_modules/
