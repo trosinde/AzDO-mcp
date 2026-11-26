@@ -29,12 +29,12 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          global-json-file: global.json
 
       - uses: actions/cache@v6
         with:
           path: ${{ env.NUGET_PACKAGES }}
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'Directory.Build.props', 'dotnet-tools.json') }}
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'Directory.Build.props', 'dotnet-tools.json', '**/global.json') }}
           restore-keys: nuget-${{ runner.os }}-
 
       - name: Restore
@@ -46,13 +46,40 @@ jobs:
       - name: Test
         run: dotnet run --project tests/AzdoMcp.Tests -c Release --no-build -- -result-trx TestResults/AzdoMcp.Tests.trx
 
+      # Failed tests as annotations: readable on the run page and via the public API, without log access.
+      - name: Annotate failed tests
+        if: failure()
+        shell: pwsh
+        run: |
+          Get-ChildItem TestResults -Filter *.trx -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
+            [xml]$trx = Get-Content $_.FullName -Raw
+            foreach ($r in $trx.TestRun.Results.UnitTestResult | Where-Object outcome -eq 'Failed') {
+              $msg = "$($r.Output.ErrorInfo.Message)" -replace '\r?\n', ' ' -replace '%', '%25'
+              if ($msg.Length -gt 900) { $msg = $msg.Substring(0, 900) + ' ...' }
+              $title = "$($r.testName)" -replace '%', '%25' -replace ',', '%2C' -replace ':', '%3A'
+              Write-Output "::error title=$title::$msg"
+            }
+          }
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: test-results
+          name: test-results-${{ runner.os }}
           path: TestResults/
           if-no-files-found: warn
+
+      # The manual must build on every push and pull request (HTML only, no PDF in CI).
+      - name: Build manual (HTML)
+        shell: pwsh
+        run: ./build/Build-Manual.ps1 -SkipPdf -OutputDir artifacts/manual
+
+      - name: Upload manual
+        uses: actions/upload-artifact@v7
+        with:
+          name: manual-html
+          path: artifacts/manual/*.html
+          if-no-files-found: error
 
   openspec:
     name: OpenSpec validate
