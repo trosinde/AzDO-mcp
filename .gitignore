@@ -13,3 +13,4 @@ config.json
 
 # dev-only tools (tools/package.json)
 node_modules/
+.claude/worktrees/
