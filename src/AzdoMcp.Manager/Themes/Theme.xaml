@@ -1,0 +1,334 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:p="clr-namespace:AzdoMcp.Manager.Platform"
+                    xmlns:vm="clr-namespace:AzdoMcp.Manager.Core.ViewModels;assembly=AzdoMcp.Manager.Core">
+
+    <!-- Colours from docs/ui-proposal (Windows 11 light). -->
+    <Color x:Key="AccentColor">#005FB8</Color>
+    <SolidColorBrush x:Key="Accent" Color="#005FB8" />
+    <SolidColorBrush x:Key="AccentHover" Color="#003E92" />
+    <SolidColorBrush x:Key="WindowBg" Color="#F3F3F3" />
+    <SolidColorBrush x:Key="ContentBg" Color="#F9F9F9" />
+    <SolidColorBrush x:Key="CardBg" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="CardBorder" Color="#E5E5E5" />
+    <SolidColorBrush x:Key="RowBorder" Color="#F0F0F0" />
+    <SolidColorBrush x:Key="Text" Color="#1B1B1B" />
+    <SolidColorBrush x:Key="TextMuted" Color="#5C5C5C" />
+    <SolidColorBrush x:Key="ButtonBg" Color="#FBFBFB" />
+    <SolidColorBrush x:Key="ButtonBorder" Color="#D1D1D1" />
+    <SolidColorBrush x:Key="SubRowBg" Color="#FAFAFA" />
+
+    <!-- Ampel: dot / pill background / pill text -->
+    <SolidColorBrush x:Key="OkDot" Color="#107C10" />
+    <SolidColorBrush x:Key="OkBg" Color="#DFF6DD" />
+    <SolidColorBrush x:Key="OkFg" Color="#0E5C0E" />
+    <SolidColorBrush x:Key="WarnDot" Color="#E3B100" />
+    <SolidColorBrush x:Key="WarnBg" Color="#FFF4CE" />
+    <SolidColorBrush x:Key="WarnFg" Color="#6B4E00" />
+    <SolidColorBrush x:Key="ErrDot" Color="#C42B1C" />
+    <SolidColorBrush x:Key="ErrBg" Color="#FDE7E9" />
+    <SolidColorBrush x:Key="ErrFg" Color="#A4262C" />
+    <SolidColorBrush x:Key="NeutralBg" Color="#F0F0F0" />
+    <SolidColorBrush x:Key="NeutralFg" Color="#4D4D4D" />
+
+    <FontFamily x:Key="UiFont">Segoe UI Variable Text, Segoe UI</FontFamily>
+    <FontFamily x:Key="MonoFont">Cascadia Mono, Consolas</FontFamily>
+    <FontFamily x:Key="IconFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+
+    <p:ToneBackgroundConverter x:Key="ToneBg" />
+    <p:ToneForegroundConverter x:Key="ToneFg" />
+    <p:LevelDotConverter x:Key="LevelDot" />
+    <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    <p:InverseBoolToVisibilityConverter x:Key="InvBoolToVis" />
+    <p:NullToVisibilityConverter x:Key="NullToVis" />
+    <p:IndentConverter x:Key="Indent" />
+    <p:InheritedOpacityConverter x:Key="InheritedOpacity" />
+
+    <!-- Pill: renders any vm:Pill -->
+    <DataTemplate DataType="{x:Type vm:Pill}">
+        <Border CornerRadius="11" Height="22" Padding="9,0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                Background="{Binding Tone, Converter={StaticResource ToneBg}}" ToolTip="{Binding Tooltip}">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Ellipse Width="8" Height="8" Margin="0,0,6,0" Fill="{Binding Tone, Converter={StaticResource LevelDot}}"
+                         Visibility="{Binding Level, Converter={StaticResource NullToVis}}" />
+                <TextBlock Text="{Binding Text}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"
+                           Foreground="{Binding Tone, Converter={StaticResource ToneFg}}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!-- Small value pill (ja / nein / n/a / ?) for the Lesen/Schreiben grid -->
+    <DataTemplate x:Key="MiniPill" DataType="{x:Type vm:Pill}">
+        <Border CornerRadius="7" Height="17" Width="30" Margin="0,0,2,0" VerticalAlignment="Center"
+                Background="{Binding Tone, Converter={StaticResource ToneBg}}" ToolTip="{Binding Tooltip}">
+            <TextBlock Text="{Binding Text}" FontSize="10.5" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Foreground="{Binding Tone, Converter={StaticResource ToneFg}}" />
+        </Border>
+    </DataTemplate>
+
+    <!-- Compact grid cell: Lesen | Schreiben of one area (items: vm:RightsRow); area names sit in RightsHeader -->
+    <DataTemplate x:Key="RightsCompactItem" DataType="{x:Type vm:RightsRow}">
+        <StackPanel Orientation="Horizontal" Width="68" VerticalAlignment="Center">
+            <ContentPresenter Content="{Binding Read}" ContentTemplate="{StaticResource MiniPill}" />
+            <ContentPresenter Content="{Binding Write}" ContentTemplate="{StaticResource MiniPill}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Column header matching RightsCompactItem: WI · Code · Pipe · Test · Iter, each "L | S" -->
+    <DataTemplate x:Key="RightsHeader">
+        <StackPanel Orientation="Horizontal" ToolTip="Je Bereich: links Lesen, rechts Schreiben">
+            <StackPanel.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Width" Value="68" />
+                    <Setter Property="FontSize" Value="11.5" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                    <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+                </Style>
+            </StackPanel.Resources>
+            <TextBlock Text="WI L|S" />
+            <TextBlock Text="Code L|S" />
+            <TextBlock Text="Pipe L|S" ToolTip="Pipelines (Builds und Releases)" />
+            <TextBlock Text="Test L|S" />
+            <TextBlock Text="Iter L|S" />
+        </StackPanel>
+    </DataTemplate>
+
+    <ItemsPanelTemplate x:Key="HorizontalPanel">
+        <StackPanel Orientation="Horizontal" />
+    </ItemsPanelTemplate>
+
+    <!-- Full table: Bereich | Lesen | Schreiben (content: list of vm:RightsRow) -->
+    <DataTemplate x:Key="RightsTable">
+        <StackPanel>
+            <Grid Margin="0,0,0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="96" />
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="1" Text="Lesen" FontSize="11" Foreground="{StaticResource TextMuted}" />
+                <TextBlock Grid.Column="2" Text="Schreiben" FontSize="11" Foreground="{StaticResource TextMuted}" />
+            </Grid>
+            <ItemsControl ItemsSource="{Binding}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:RightsRow}">
+                        <Grid Margin="0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="96" />
+                                <ColumnDefinition Width="70" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Name}" FontSize="12.5" VerticalAlignment="Center" />
+                            <ContentPresenter Grid.Column="1" Content="{Binding Read}" />
+                            <ContentPresenter Grid.Column="2" Content="{Binding Write}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </DataTemplate>
+
+    <Style x:Key="Card" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CardBg}" />
+        <Setter Property="BorderBrush" Value="{StaticResource CardBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+    </Style>
+
+    <Style x:Key="H1" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource Text}" />
+    </Style>
+
+    <Style x:Key="H2" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource Text}" />
+    </Style>
+
+    <Style x:Key="Muted" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12.5" />
+        <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style x:Key="Hint" TargetType="TextBlock" BasedOn="{StaticResource Muted}">
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <Style x:Key="Label" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Margin" Value="0,0,0,5" />
+    </Style>
+
+    <Style x:Key="Mono" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource MonoFont}" />
+        <Setter Property="FontSize" Value="12.5" />
+    </Style>
+
+    <Style x:Key="TableHeader" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+        <Setter Property="Margin" Value="14,8" />
+    </Style>
+
+    <!-- Buttons -->
+    <Style x:Key="Btn" TargetType="Button">
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{StaticResource Text}" />
+        <Setter Property="Background" Value="{StaticResource ButtonBg}" />
+        <Setter Property="BorderBrush" Value="{StaticResource ButtonBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="b" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="b" Property="Opacity" Value="0.88" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="b" Property="Opacity" Value="0.75" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="b" Property="Opacity" Value="0.45" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BtnPrimary" TargetType="Button" BasedOn="{StaticResource Btn}">
+        <Setter Property="Background" Value="{StaticResource Accent}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Accent}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style x:Key="BtnDanger" TargetType="Button" BasedOn="{StaticResource Btn}">
+        <Setter Property="Background" Value="{StaticResource ErrDot}" />
+        <Setter Property="BorderBrush" Value="{StaticResource ErrDot}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource Btn}">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="#4D4D4D" />
+    </Style>
+
+    <Style x:Key="Link" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Accent}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <TextBlock x:Name="t" Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="t" Property="Foreground" Value="{StaticResource AccentHover}" />
+                            <Setter TargetName="t" Property="TextDecorations" Value="Underline" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Segmented switch Erlaubt / Nachfragen / Gesperrt -->
+    <Style x:Key="SegBase" TargetType="RadioButton">
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{StaticResource Text}" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="b" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"
+                            BorderBrush="{StaticResource ButtonBorder}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <TextBlock x:Name="t" Text="{TemplateBinding Content}" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="SegAllowed" TargetType="RadioButton" BasedOn="{StaticResource SegBase}">
+        <Setter Property="BorderThickness" Value="0,0,1,0" />
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="#107C10" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="SegAsk" TargetType="RadioButton" BasedOn="{StaticResource SegBase}">
+        <Setter Property="BorderThickness" Value="0,0,1,0" />
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="#F7D44A" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="SegBlocked" TargetType="RadioButton" BasedOn="{StaticResource SegBase}">
+        <Setter Property="BorderThickness" Value="0" />
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="#C42B1C" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Navigation entry -->
+    <Style x:Key="NavItem" TargetType="ListBoxItem">
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Margin" Value="0,0,0,2" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="b" CornerRadius="6" Background="Transparent" Padding="12,0">
+                        <Grid>
+                            <Border x:Name="bar" Width="3" Height="16" CornerRadius="2" Background="{StaticResource Accent}"
+                                    HorizontalAlignment="Left" Margin="-12,0,0,0" Visibility="Collapsed" />
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="b" Property="Background" Value="#0A000000" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="b" Property="Background" Value="#0F000000" />
+                            <Setter TargetName="bar" Property="Visibility" Value="Visible" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Input" TargetType="TextBox">
+        <Setter Property="Height" Value="32" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+</ResourceDictionary>

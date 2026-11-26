@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>AzDO MCP Manager – Verbindung &amp; PAT</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#005FB8}a:hover{color:#003E92}
+.nav{display:flex;align-items:center;gap:12px;height:40px;padding:0 12px;border-radius:6px;color:#1B1B1B;text-decoration:none;font-size:14px;position:relative}
+.nav:hover{background:rgba(0,0,0,.04)}
+.navon{background:rgba(0,0,0,.06);font-weight:600}
+.bar{position:absolute;left:0;top:12px;width:3px;height:16px;border-radius:2px;background:#005FB8}
+.card{background:#FFFFFF;border:1px solid #E5E5E5;border-radius:8px}
+.mono{font-family:'Cascadia Mono',Consolas,ui-monospace,monospace;font-size:12.5px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 14px;border-radius:4px;border:1px solid #D1D1D1;border-bottom-color:#BDBDBD;background:#FBFBFB;color:#1B1B1B;font:400 14px 'Segoe UI Variable','Segoe UI',sans-serif;cursor:pointer;text-decoration:none;box-sizing:border-box;white-space:nowrap;flex-shrink:0}
+.btnp{background:#005FB8;border-color:#005FB8;color:#FFFFFF}
+.pill{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.g{background:#DFF6DD;color:#0E5C0E}.y{background:#FFF4CE;color:#6B4E00}.r{background:#FDE7E9;color:#A4262C}.n{background:#F0F0F0;color:#4D4D4D}
+.cap{width:46px;height:32px;display:inline-flex;align-items:center;justify-content:center;border:none;background:transparent;color:#1B1B1B;cursor:pointer}
+.lbl{font-size:13px;font-weight:600}
+.hint{font-size:12px;color:#5C5C5C}
+.fn{font-size:11.5px;color:#5C5C5C;line-height:1.45}
+.inp{height:32px;border:1px solid #D1D1D1;border-bottom:1px solid #8A8A8A;border-radius:4px;padding:0 10px;font:400 14px 'Segoe UI Variable','Segoe UI',sans-serif;color:#1B1B1B;background:#FFFFFF;box-sizing:border-box;width:100%}
+.rb{display:flex;align-items:center;gap:8px;font-size:14px}
+.chk{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;padding:5px 0}
+.row{display:flex;align-items:flex-start;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px solid #F0F0F0}
+.conn{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:34px;padding:0 10px;border-radius:4px;text-decoration:none;color:#1B1B1B;font-size:13.5px}
+.connon{background:#E5EEF8}
+.proj{display:flex;align-items:center;justify-content:space-between;gap:6px;height:26px;padding:0 10px 0 24px;font-size:12.5px;color:#333333}
+.scope{display:grid;grid-template-columns:96px 1fr;align-items:center;gap:6px 8px;font-size:12.5px}
+</style>
+</helmet>
+<div style="width: 1120px; height: 740px; box-sizing: border-box; font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif; color: #1B1B1B; background: #F3F3F3; border: 1px solid #CFCFCF; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
+
+  <div style="height: 32px; display: flex; align-items: center; gap: 10px; padding-left: 14px; flex-shrink: 0">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#005FB8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 17.5h7M17.5 14v7"/></svg>
+    <span style="font-size: 12px">AzDO MCP Manager</span>
+    <div style="flex-grow: 1"></div>
+    <button class="cap" type="button" aria-label="Minimieren"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 5h10" stroke="currentColor"/></svg></button>
+    <button class="cap" type="button" aria-label="Maximieren"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor"/></svg></button>
+    <button class="cap" type="button" aria-label="In den Infobereich schliessen"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor"/></svg></button>
+  </div>
+
+  <div style="flex: 1 1 auto; display: flex; min-height: 0">
+    <nav aria-label="Navigation" style="width: 232px; flex-shrink: 0; padding: 6px 8px 12px; display: flex; flex-direction: column; gap: 2px; box-sizing: border-box">
+      <a class="nav" href="Main.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>Übersicht</a>
+      <a class="nav navon" href="Verbindung.dc.html" aria-current="page"><span class="bar"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/></svg>Verbindungen &amp; PATs</a>
+      <a class="nav" href="Clients.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8"/></svg>MCP-Clients</a>
+      <a class="nav" href="Tools.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>Tools &amp; Rechte</a>
+      <a class="nav" href="Protokoll.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Protokoll</a>
+      <div style="flex-grow: 1"></div>
+      <div style="padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: #5C5C5C"><span>Benutzer-Installation · ohne Admin</span><span>v2.0.0 · Updates: aktuell</span></div>
+    </nav>
+
+    <main style="flex: 1 1 auto; min-width: 0; background: #F9F9F9; border-top: 1px solid #E5E5E5; border-left: 1px solid #E5E5E5; border-top-left-radius: 8px; padding: 20px 28px 16px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <header style="display: flex; align-items: center; justify-content: space-between; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+          <h1 style="margin: 0; font-size: 28px; font-weight: 600">Verbindungen &amp; PATs</h1>
+          <span class="hint">Eine Verbindung = eine Collection mit einem PAT. Die Projekte darin richtest du mit «Projekte erkennen» ein.</span>
+        </div>
+        <div style="display: flex; gap: 8px">
+          <button class="btn" type="button" style="color: #A4262C">Entfernen</button>
+          <button class="btn" type="button">Verwerfen</button>
+          <button class="btn btnp" type="button">Speichern</button>
+        </div>
+      </header>
+
+      <div style="display: flex; gap: 14px; min-height: 0; flex: 1 1 auto">
+        <aside class="card" aria-label="Verbindungsliste" style="width: 214px; flex-shrink: 0; padding: 6px; display: flex; flex-direction: column; gap: 2px; box-sizing: border-box">
+          <a class="conn connon" href="#" aria-current="true"><span style="display: flex; flex-direction: column; min-width: 0"><strong>azdo-server</strong><span class="hint">3 Projekte</span></span><span class="pill y">4 Tage</span></a>
+          <div class="proj"><span>SHOP</span><span class="pill n" style="height: 18px; font-size: 11px">Standard</span></div>
+          <div class="proj"><span>OPS</span></div>
+          <div class="proj"><span>Musterlab</span></div>
+          <a class="conn" href="#" style="margin-top: 6px"><span style="display: flex; flex-direction: column; min-width: 0"><span>dev.azure.com</span><span class="hint">1 Projekt</span></span><span class="pill r">abgelaufen</span></a>
+          <div style="flex-grow: 1"></div>
+          <button class="btn" type="button">+ Neue Verbindung</button>
+        </aside>
+
+        <section class="card" aria-label="Verbindungsdaten" style="flex: 1 1 auto; min-width: 0; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px">
+          <div role="radiogroup" aria-label="Server-Typ" style="display: flex; gap: 22px">
+            <label class="rb"><input type="radio" name="typ" style="width: 18px; height: 18px; margin: 0">Azure DevOps Services</label>
+            <label class="rb"><input type="radio" name="typ" checked style="width: 18px; height: 18px; margin: 0">Azure DevOps Server (on-prem)</label>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 5px"><label class="lbl" for="kn">Name der Verbindung</label><input class="inp" id="kn" value="azdo-server"><span class="hint">Die KI wählt das Projekt per Name, z. B. project=&quot;SHOP&quot;.</span></div>
+          <div style="display: flex; flex-direction: column; gap: 5px"><label class="lbl" for="url">Collection-URL</label><input class="inp mono" id="url" value="https://azdo.example.local/DefaultCollection" style="font-size: 13px"></div>
+          <div style="display: flex; flex-direction: column; gap: 5px">
+            <label class="lbl" for="pat">Personal Access Token</label>
+            <div style="display: flex; gap: 8px"><input class="inp mono" id="pat" type="password" value="••••••••••••••••••••••••••••" style="flex: 1 1 auto"><button class="btn" type="button">Ersetzen</button><button class="btn" type="button">PAT erstellen ↗</button></div>
+            <span class="hint">Ein PAT gilt für alle Projekte dieser Collection. Verschlüsselt mit Windows DPAPI, nur dieser Benutzer.</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+            <div style="display: flex; flex-direction: column; gap: 5px"><label class="lbl" for="exp">PAT gültig bis</label><input class="inp" id="exp" value="16.11.2026"></div>
+            <div style="display: flex; flex-direction: column; gap: 5px"><label class="lbl" for="rem">Erinnerung</label><select class="inp" id="rem"><option>7 Tage vorher (Tray-Hinweis)</option></select></div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 6px; background: #F5F8FC; border: 1px solid #DCE6F2">
+            <div style="display: flex; flex-direction: column; gap: 2px">
+              <strong style="font-size: 13.5px">Projekte: 3 eingerichtet</strong>
+              <span class="hint">SHOP (Standard), OPS, Musterlab · zuletzt erkannt am 02.11.2026</span>
+            </div>
+            <a class="btn" href="NeuEinlesen.dc.html">Neu einlesen</a>
+          </div>
+          <label class="chk"><input type="checkbox" style="width: 18px; height: 18px; margin: 1px 0 0"><span><strong>Standard-Verbindung</strong> <span class="hint">– wenn die KI kein Projekt angibt, gilt das Standardprojekt</span></span></label>
+        </section>
+
+        <section class="card" aria-label="Verbindungstest" style="width: 290px; flex-shrink: 0; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; box-sizing: border-box">
+          <h2 style="margin: 0 0 8px; font-size: 15px; font-weight: 600">Verbindungstest</h2>
+          <button class="btn" type="button" style="width: 100%; margin-bottom: 6px">Verbindung testen</button>
+          <span class="hint" style="padding-bottom: 2px">Letzter Test: heute 14:02</span>
+          <div class="row"><span class="pill g">OK</span>Server erreichbar · API 7.0</div>
+          <div class="row"><span class="pill g">OK</span>Angemeldet als Max Muster</div>
+          <div class="row" style="border-bottom: none"><span class="pill y">Hinweis</span>PAT läuft in 4 Tagen ab</div>
+
+          <div style="margin-top: 6px; padding-top: 10px; border-top: 1px solid #E5E5E5; display: flex; flex-direction: column; gap: 8px">
+            <strong style="font-size: 13px">PAT-Scope (gilt für alle Projekte)³</strong>
+            <div class="scope">
+              <span>Work Items</span><span><span class="pill g">Schreiben</span></span>
+              <span>Code</span><span><span class="pill y">nur Lesen</span></span>
+              <span>Test</span><span><span class="pill y">nur Lesen</span></span>
+              <span>Iterationen</span><span><span class="pill y">nur Lesen</span></span>
+            </div>
+          </div>
+
+          <a class="btn btnp" href="Erkennung.dc.html" style="margin-top: 12px">Projekte erkennen</a>
+          <span class="hint" style="padding-top: 4px">Liest alle Projekte, die dieser PAT sieht, und prüft je Projekt dein effektives Recht².</span>
+        </section>
+      </div>
+
+      <div class="fn">
+        ¹ Ampel: <strong style="color: #0E5C0E">Grün</strong> = Schreiben · <strong style="color: #6B4E00">Gelb</strong> = nur Lesen · <strong style="color: #A4262C">Rot</strong> = kein Zugriff.
+        ² Effektives Recht = was der MCP-Server in einem Projekt höchstens darf: der kleinere Wert aus PAT-Scope und deinen Projektrechten in Azure DevOps; «Tools &amp; Rechte» kann weiter einschränken, nie erweitern.
+        ³ PAT-Scope = die Bereiche, die beim Erstellen des PAT freigegeben wurden; er gilt für die ganze Collection.
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1120,"height":740}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

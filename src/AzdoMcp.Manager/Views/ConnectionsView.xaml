@@ -1,0 +1,250 @@
+<UserControl x:Class="AzdoMcp.Manager.Views.ConnectionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vmc="clr-namespace:AzdoMcp.Manager.Core.ViewModels;assembly=AzdoMcp.Manager.Core">
+    <DockPanel Margin="28,20,28,16">
+        <!-- Header -->
+        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Style="{StaticResource Btn}" Content="Entfernen" Foreground="{StaticResource ErrFg}" Command="{Binding RemoveCommand}" Margin="0,0,8,0" />
+                <Button Style="{StaticResource Btn}" Content="Verwerfen" Command="{Binding DiscardCommand}" Margin="0,0,8,0" />
+                <Button Style="{StaticResource BtnPrimary}" Content="Speichern" Command="{Binding SaveCommand}" />
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Verbindungen &amp; PATs" Style="{StaticResource H1}" />
+                <TextBlock Text="{Binding PageHintText}" Style="{StaticResource Hint}" Margin="0,2,0,0" />
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Footnotes -->
+        <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+            <TextBlock FontSize="11.5" Foreground="{StaticResource TextMuted}" TextWrapping="Wrap">
+                <Run Text="¹ Je Bereich Lesen und Schreiben: " /><Run Text="ja" FontWeight="Bold" Foreground="{StaticResource OkFg}" /><Run Text=" = geprüft, erlaubt · " /><Run Text="nein" FontWeight="Bold" Foreground="{StaticResource ErrFg}" /><Run Text=" = geprüft, verweigert · " /><Run Text="n/a" FontWeight="Bold" /><Run Text=" = ohne echtes Schreiben nicht prüfbar · " /><Run Text="?" FontWeight="Bold" /><Run Text=" = noch nicht geprüft." />
+            </TextBlock>
+            <TextBlock Text="² Effektives Recht = was der MCP-Server in einem Projekt höchstens darf: PAT-Scope kombiniert mit deinen Projektrechten in Azure DevOps, je Bereich Lesen und Schreiben (ja · nein · n/a = nicht prüfbar · ? = noch nicht geprüft); nur „nein“ sperrt. «Tools &amp; Rechte» kann weiter einschränken, nie erweitern."
+                       FontSize="11.5" Foreground="{StaticResource TextMuted}" TextWrapping="Wrap" />
+            <TextBlock Text="³ PAT-Scope = die Bereiche, die beim Erstellen des PAT freigegeben wurden; er gilt für die ganze Collection."
+                       FontSize="11.5" Foreground="{StaticResource TextMuted}" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" MinWidth="320" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="260" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Connection list with projects -->
+            <Border Grid.Column="0" Style="{StaticResource Card}" Padding="6">
+                <DockPanel>
+                    <Button DockPanel.Dock="Bottom" Style="{StaticResource Btn}" Content="+ Neue Verbindung" Command="{Binding NewCommand}" />
+                    <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" BorderThickness="0" Background="Transparent"
+                             AutomationProperties.Name="Verbindungsliste" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <StackPanel Margin="0,0,0,6">
+                                                <Border x:Name="b" MinHeight="38" Padding="10,4" CornerRadius="4" Background="Transparent">
+                                                    <ContentPresenter VerticalAlignment="Center" />
+                                                </Border>
+                                            </StackPanel>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="b" Property="Background" Value="#0A000000" /></Trigger>
+                                                <Trigger Property="IsSelected" Value="True"><Setter TargetName="b" Property="Background" Value="#E5EEF8" /></Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <DockPanel>
+                                        <ContentPresenter DockPanel.Dock="Right" Content="{Binding Pill}" VerticalAlignment="Center" />
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Name}" FontSize="13.5" FontWeight="Bold" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Text="{Binding Detail}" Style="{StaticResource Hint}" />
+                                        </StackPanel>
+                                    </DockPanel>
+                                    <ItemsControl ItemsSource="{Binding Projects}" Margin="14,4,0,0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <DockPanel Height="24">
+                                                    <Border DockPanel.Dock="Right" CornerRadius="9" Height="18" Padding="7,0" Background="{StaticResource NeutralBg}"
+                                                            Visibility="{Binding IsDefault, Converter={StaticResource BoolToVis}}" VerticalAlignment="Center">
+                                                        <TextBlock Text="Standard" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource NeutralFg}" VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <TextBlock x:Name="alias" Text="{Binding Alias}" FontSize="12.5" Foreground="#333333" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                </DockPanel>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding Visible}" Value="False">
+                                                        <Setter TargetName="alias" Property="TextDecorations" Value="Strikethrough" />
+                                                        <Setter TargetName="alias" Property="Foreground" Value="{StaticResource ErrFg}" />
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <!-- Connection data -->
+            <Border Grid.Column="2" Style="{StaticResource Card}" Padding="18,14">
+                <Grid>
+                    <TextBlock Text="Noch keine Verbindung. „+ Neue Verbindung“ startet die Einrichtung." Style="{StaticResource Muted}"
+                               Visibility="{Binding HasSelection, Converter={StaticResource InvBoolToVis}}" />
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding HasSelection, Converter={StaticResource BoolToVis}}">
+                        <StackPanel Margin="0,0,14,0">
+                            <WrapPanel Margin="0,0,0,10" AutomationProperties.Name="Server-Typ">
+                                <RadioButton Content="Azure DevOps Services" IsChecked="{Binding IsServices}" GroupName="ctyp" FontSize="14" Margin="0,0,22,4" />
+                                <RadioButton Content="Azure DevOps Server (on-prem)" IsChecked="{Binding IsServer}" GroupName="ctyp" FontSize="14" Margin="0,0,0,4" />
+                            </WrapPanel>
+
+                            <TextBlock Text="Name der Verbindung" Style="{StaticResource Label}" />
+                            <TextBox Style="{StaticResource Input}" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Name der Verbindung" />
+                            <TextBlock Text="{Binding NameHint}" Style="{StaticResource Hint}" Margin="0,5,0,12" />
+
+                            <TextBlock Text="Collection-URL" Style="{StaticResource Label}" />
+                            <TextBox Style="{StaticResource Input}" FontFamily="{StaticResource MonoFont}" FontSize="13"
+                                     Text="{Binding CollectionUrl, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Collection-URL" Margin="0,0,0,12" />
+
+                            <TextBlock Text="Personal Access Token" Style="{StaticResource Label}" />
+                            <Grid>
+                                <TextBox Style="{StaticResource Input}" FontFamily="{StaticResource MonoFont}" IsReadOnly="True" Text="{Binding PatMaskText, Mode=OneWay}"
+                                         Visibility="{Binding IsReplacingPat, Converter={StaticResource InvBoolToVis}}" AutomationProperties.Name="Gespeicherter PAT" Focusable="False" />
+                                <PasswordBox x:Name="Pat" Height="32" FontSize="14" PasswordChanged="OnPatChanged"
+                                             Visibility="{Binding IsReplacingPat, Converter={StaticResource BoolToVis}}" AutomationProperties.Name="Personal Access Token" />
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                <Button Style="{StaticResource Btn}" Content="Ersetzen" Command="{Binding ReplacePatCommand}" Margin="0,0,8,0"
+                                        Visibility="{Binding IsReplacingPat, Converter={StaticResource InvBoolToVis}}" />
+                                <Button Style="{StaticResource Btn}" Content="PAT erstellen ↗" Command="{Binding CreatePatCommand}" />
+                            </StackPanel>
+                            <TextBlock Text="Ein PAT gilt für alle Projekte dieser Collection. Verschlüsselt mit Windows DPAPI, nur dieser Benutzer." Style="{StaticResource Hint}" Margin="0,5,0,12" />
+
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="PAT gültig bis" Style="{StaticResource Label}" />
+                                    <DatePicker SelectedDate="{Binding PatExpires}" Height="32" FontSize="14" AutomationProperties.Name="PAT gültig bis" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Erinnerung" Style="{StaticResource Label}" />
+                                    <ComboBox Height="32" FontSize="14" ItemsSource="{x:Static vmc:ConnectionsViewModel.ReminderOptions}"
+                                              SelectedItem="{Binding Reminder}" DisplayMemberPath="Text" AutomationProperties.Name="Erinnerung" />
+                                    <TextBlock Text="als Tray-Hinweis" Style="{StaticResource Hint}" Margin="0,5,0,0" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Border Padding="12,10" CornerRadius="6" Background="#F5F8FC" BorderBrush="#DCE6F2" BorderThickness="1" Margin="0,0,0,12">
+                                <DockPanel>
+                                    <Button DockPanel.Dock="Right" Style="{StaticResource Btn}" Content="Neu einlesen" Command="{Binding RescanCommand}" VerticalAlignment="Center" Margin="8,0,0,0" />
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding ProjectsSummary}" FontSize="13.5" FontWeight="Bold" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding ProjectsDetail}" Style="{StaticResource Hint}" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+
+                            <TextBlock Text="Kurznamen" Style="{StaticResource Label}" />
+                            <ItemsControl ItemsSource="{Binding ShortNames}" Margin="0,0,0,4">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="130" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding ProjectName}" FontSize="13" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip="{Binding ProjectName}" />
+                                                <TextBox Grid.Column="1" Style="{StaticResource Input}" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" CharacterCasing="Upper" MaxLength="10"
+                                                         FontFamily="{StaticResource MonoFont}" AutomationProperties.Name="{Binding ProjectName, StringFormat=Kurzname {0}}" />
+                                            </Grid>
+                                            <TextBlock Text="{Binding Error}" FontSize="12" Foreground="{StaticResource ErrFg}" TextWrapping="Wrap" Visibility="{Binding Error, Converter={StaticResource NullToVis}}" />
+                                            <TextBlock Text="{Binding LegacyHint}" Style="{StaticResource Hint}" TextWrapping="Wrap" Visibility="{Binding LegacyHint, Converter={StaticResource NullToVis}}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="So sprichst du ein Projekt im Prompt an, z. B. „offene Bugs in SHOP“. Umbenennen: alte Prompts funktionieren danach nicht mehr." Style="{StaticResource Hint}" TextWrapping="Wrap" Margin="0,0,0,12" />
+
+                            <TextBlock Text="Standardprojekt" Style="{StaticResource Label}" />
+                            <ComboBox Height="32" FontSize="14" ItemsSource="{Binding DefaultProjectOptions}" SelectedItem="{Binding DefaultProject}" DisplayMemberPath="Text"
+                                      AutomationProperties.Name="Standardprojekt" />
+                            <TextBlock Text="Gilt, wenn die KI kein Projekt angibt." Style="{StaticResource Hint}" Margin="0,5,0,0" />
+
+                            <TextBlock Text="{Binding ValidationMessage}" Foreground="{StaticResource ErrFg}" FontSize="13" Margin="0,8,0,0" TextWrapping="Wrap"
+                                       Visibility="{Binding ValidationMessage, Converter={StaticResource NullToVis}}" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- Test panel -->
+            <Border Grid.Column="4" Style="{StaticResource Card}" Padding="14,12">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,0,8,0">
+                        <TextBlock Text="Verbindungstest" Style="{StaticResource H2}" Margin="0,0,0,8" />
+                        <Button Style="{StaticResource Btn}" Content="Verbindung testen" Command="{Binding TestCommand}" HorizontalAlignment="Stretch" />
+                        <TextBlock Text="{Binding LastTested}" Style="{StaticResource Hint}" Margin="0,6,0,2" />
+                        <ItemsControl ItemsSource="{Binding TestResults}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="{StaticResource RowBorder}" BorderThickness="0,0,0,1" Padding="0,6">
+                                        <DockPanel>
+                                            <Border DockPanel.Dock="Left" CornerRadius="11" Height="22" Padding="9,0" Margin="0,0,10,0" VerticalAlignment="Top" x:Name="pill">
+                                                <TextBlock Text="{Binding Code}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" x:Name="code" />
+                                            </Border>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Text}" FontSize="13" TextWrapping="Wrap" />
+                                                <TextBlock Text="{Binding Hint}" Style="{StaticResource Hint}" Visibility="{Binding Hint, Converter={StaticResource NullToVis}}" />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </Border>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Level}" Value="Ok">
+                                            <Setter TargetName="pill" Property="Background" Value="{StaticResource OkBg}" />
+                                            <Setter TargetName="code" Property="Foreground" Value="{StaticResource OkFg}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Level}" Value="Warning">
+                                            <Setter TargetName="pill" Property="Background" Value="{StaticResource WarnBg}" />
+                                            <Setter TargetName="code" Property="Foreground" Value="{StaticResource WarnFg}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Level}" Value="Error">
+                                            <Setter TargetName="pill" Property="Background" Value="{StaticResource ErrBg}" />
+                                            <Setter TargetName="code" Property="Foreground" Value="{StaticResource ErrFg}" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Border BorderBrush="{StaticResource CardBorder}" BorderThickness="0,1,0,0" Margin="0,8,0,0" Padding="0,10,0,0">
+                            <StackPanel>
+                                <TextBlock Text="PAT-Scope (gilt für alle Projekte)³" FontSize="13" FontWeight="Bold" Margin="0,0,0,6" />
+                                <ContentControl Content="{Binding Scope}" ContentTemplate="{StaticResource RightsTable}" Focusable="False" />
+                                <TextBlock Text="{Binding ScopeFootnoteText}" Style="{StaticResource Hint}" TextWrapping="Wrap" Margin="0,6,0,0" />
+                            </StackPanel>
+                        </Border>
+
+                        <Button Style="{StaticResource BtnPrimary}" Content="Projekte erkennen" Command="{Binding DiscoverCommand}" HorizontalAlignment="Stretch" Margin="0,12,0,0" />
+                        <TextBlock Text="Liest alle Projekte, die dieser PAT sieht, und prüft je Projekt dein effektives Recht²." Style="{StaticResource Hint}" Margin="0,4,0,0" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </DockPanel>
+</UserControl>

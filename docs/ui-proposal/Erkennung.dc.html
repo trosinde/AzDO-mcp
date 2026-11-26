@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>AzDO MCP Manager – Projekte erkennen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#005FB8}a:hover{color:#003E92}
+.nav{display:flex;align-items:center;gap:12px;height:40px;padding:0 12px;border-radius:6px;color:#1B1B1B;text-decoration:none;font-size:14px;position:relative}
+.nav:hover{background:rgba(0,0,0,.04)}
+.navon{background:rgba(0,0,0,.06);font-weight:600}
+.bar{position:absolute;left:0;top:12px;width:3px;height:16px;border-radius:2px;background:#005FB8}
+.card{background:#FFFFFF;border:1px solid #E5E5E5;border-radius:8px}
+.mono{font-family:'Cascadia Mono',Consolas,ui-monospace,monospace;font-size:12.5px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 14px;border-radius:4px;border:1px solid #D1D1D1;border-bottom-color:#BDBDBD;background:#FBFBFB;color:#1B1B1B;font:400 14px 'Segoe UI Variable','Segoe UI',sans-serif;cursor:pointer;text-decoration:none;box-sizing:border-box;white-space:nowrap;flex-shrink:0}
+.btnp{background:#005FB8;border-color:#005FB8;color:#FFFFFF}
+.pill{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.g{background:#DFF6DD;color:#0E5C0E}.y{background:#FFF4CE;color:#6B4E00}.r{background:#FDE7E9;color:#A4262C}.n{background:#F0F0F0;color:#4D4D4D}
+.cap{width:46px;height:32px;display:inline-flex;align-items:center;justify-content:center;border:none;background:transparent;color:#1B1B1B;cursor:pointer}
+.hint{font-size:12px;color:#5C5C5C}
+.fn{font-size:11.5px;color:#5C5C5C;line-height:1.45}
+.inp{height:32px;border:1px solid #D1D1D1;border-bottom:1px solid #8A8A8A;border-radius:4px;padding:0 10px;font:400 14px 'Segoe UI Variable','Segoe UI',sans-serif;color:#1B1B1B;background:#FFFFFF;box-sizing:border-box}
+.th{font-size:12px;font-weight:600;color:#5C5C5C;text-align:left;padding:8px 12px;border-bottom:1px solid #E5E5E5;white-space:nowrap}
+.td{font-size:13.5px;color:#1B1B1B;padding:8px 12px;border-bottom:1px solid #F0F0F0;vertical-align:middle}
+.cb{width:18px;height:18px;margin:0}
+.mute td{color:#8A8A8A}
+</style>
+</helmet>
+<div style="width: 1120px; height: 740px; box-sizing: border-box; font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif; color: #1B1B1B; background: #F3F3F3; border: 1px solid #CFCFCF; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
+
+  <div style="height: 32px; display: flex; align-items: center; gap: 10px; padding-left: 14px; flex-shrink: 0">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#005FB8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 17.5h7M17.5 14v7"/></svg>
+    <span style="font-size: 12px">AzDO MCP Manager</span>
+    <div style="flex-grow: 1"></div>
+    <button class="cap" type="button" aria-label="Minimieren"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 5h10" stroke="currentColor"/></svg></button>
+    <button class="cap" type="button" aria-label="Maximieren"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor"/></svg></button>
+    <button class="cap" type="button" aria-label="In den Infobereich schliessen"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor"/></svg></button>
+  </div>
+
+  <div style="flex: 1 1 auto; display: flex; min-height: 0">
+    <nav aria-label="Navigation" style="width: 232px; flex-shrink: 0; padding: 6px 8px 12px; display: flex; flex-direction: column; gap: 2px; box-sizing: border-box">
+      <a class="nav" href="Main.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>Übersicht</a>
+      <a class="nav navon" href="Verbindung.dc.html" aria-current="page"><span class="bar"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/></svg>Verbindungen &amp; PATs</a>
+      <a class="nav" href="Clients.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8"/></svg>MCP-Clients</a>
+      <a class="nav" href="Tools.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>Tools &amp; Rechte</a>
+      <a class="nav" href="Protokoll.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Protokoll</a>
+      <div style="flex-grow: 1"></div>
+      <div style="padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: #5C5C5C"><span>Benutzer-Installation · ohne Admin</span><span>v2.0.0 · Updates: aktuell</span></div>
+    </nav>
+
+    <main style="flex: 1 1 auto; min-width: 0; background: #F9F9F9; border-top: 1px solid #E5E5E5; border-left: 1px solid #E5E5E5; border-top-left-radius: 8px; padding: 18px 28px 14px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <header style="display: flex; flex-direction: column; gap: 2px">
+        <a href="Verbindung.dc.html" style="font-size: 13px; text-decoration: none">← Verbindung azdo-server</a>
+        <h1 style="margin: 0; font-size: 26px; font-weight: 600">Projekte erkennen</h1>
+        <span class="hint">Collection <span class="mono">azdo.example.local/DefaultCollection</span> · 7 Projekte für diesen PAT sichtbar · Rechte je Projekt geprüft heute 14:05</span>
+      </header>
+
+      <div style="display: flex; align-items: center; gap: 12px">
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 14px"><input class="cb" type="checkbox">Alle auswählen</label>
+        <div style="flex-grow: 1"></div>
+        <select class="inp" aria-label="Filter" style="width: 190px"><option>Alle Projekte (7)</option><option>Nur neue (4)</option><option>Bereits eingerichtet (3)</option></select>
+        <input class="inp" aria-label="Projekte suchen" placeholder="Projekt suchen …" style="width: 220px">
+      </div>
+
+      <section class="card" aria-label="Gefundene Projekte" style="overflow: hidden">
+        <table style="width: 100%; border-collapse: collapse">
+          <thead><tr>
+            <th class="th" style="width: 34px"><span style="position: absolute; left: -9999px">Auswahl</span></th>
+            <th class="th">Projekt</th><th class="th">Work Items¹ ²</th><th class="th">Code¹ ²</th><th class="th">Test¹ ²</th><th class="th">Status</th>
+          </tr></thead>
+          <tbody>
+            <tr class="mute"><td class="td"><input class="cb" type="checkbox" checked disabled aria-label="SHOP"></td><td class="td" style="color: #1B1B1B"><strong>SHOP</strong> <span class="hint">· Standard</span></td><td class="td"><span class="pill g">Schreiben</span></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill n">bereits eingerichtet</span></td></tr>
+            <tr class="mute"><td class="td"><input class="cb" type="checkbox" checked disabled aria-label="OPS"></td><td class="td" style="color: #1B1B1B"><strong>OPS</strong></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill r">kein Zugriff</span></td><td class="td"><span class="pill n">bereits eingerichtet</span></td></tr>
+            <tr class="mute"><td class="td"><input class="cb" type="checkbox" checked disabled aria-label="Musterlab"></td><td class="td" style="color: #1B1B1B"><strong>Musterlab</strong></td><td class="td"><span class="pill g">Schreiben</span></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill n">bereits eingerichtet</span></td></tr>
+            <tr><td class="td"><input class="cb" type="checkbox" checked aria-label="Musterlab-Firmware"></td><td class="td"><strong>Musterlab-Firmware</strong></td><td class="td"><span class="pill g">Schreiben</span></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill r">kein Zugriff</span></td><td class="td"><span class="pill g">neu</span></td></tr>
+            <tr><td class="td"><input class="cb" type="checkbox" checked aria-label="QA-Automation"></td><td class="td"><strong>QA-Automation</strong></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill g">neu</span></td></tr>
+            <tr><td class="td"><input class="cb" type="checkbox" aria-label="Sandbox"></td><td class="td"><strong>Sandbox</strong></td><td class="td"><span class="pill g">Schreiben</span></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill y">nur Lesen</span></td><td class="td"><span class="pill g">neu</span></td></tr>
+            <tr><td class="td" style="border-bottom: none"><input class="cb" type="checkbox" aria-label="Archiv-2019"></td><td class="td" style="border-bottom: none"><strong>Archiv-2019</strong></td><td class="td" style="border-bottom: none"><span class="pill r">kein Zugriff</span></td><td class="td" style="border-bottom: none"><span class="pill y">nur Lesen</span></td><td class="td" style="border-bottom: none"><span class="pill r">kein Zugriff</span></td><td class="td" style="border-bottom: none"><span class="pill g">neu</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <div style="display: flex; align-items: center; gap: 14px; padding: 10px 14px; border-radius: 6px; background: #FFF4CE; border: 1px solid #EED78A">
+        <div style="flex: 1 1 auto; font-size: 13px; color: #4A3600">
+          <strong>Voreinstellung für neue Projekte:</strong> Lesen = Erlaubt · Schreiben = Nachfragen · <strong>Schreibschalter aus</strong>. Schreiben schaltest du pro Projekt unter «Tools &amp; Rechte» frei.
+        </div>
+        <a class="btn" href="Verbindung.dc.html">Abbrechen</a>
+        <a class="btn btnp" href="Tools.dc.html">Übernehmen (2 Projekte)</a>
+      </div>
+
+      <div class="fn">
+        ¹ Ampel: <strong style="color: #0E5C0E">Grün</strong> = Schreiben · <strong style="color: #6B4E00">Gelb</strong> = nur Lesen · <strong style="color: #A4262C">Rot</strong> = kein Zugriff (Tools für diesen Bereich werden im Projekt gesperrt).
+        ² Gezeigt wird das effektive Recht: der kleinere Wert aus PAT-Scope³ und deinen Projektrechten in Azure DevOps. Darum ist «Code» hier höchstens Gelb – der PAT hat für Code nur Lesen.
+        ³ PAT-Scope = die beim Erstellen des PAT freigegebenen Bereiche; gilt für alle Projekte der Collection.
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1120,"height":740}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

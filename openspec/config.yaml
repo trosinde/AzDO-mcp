@@ -1,0 +1,21 @@
+schema: spec-driven
+
+context: |
+  AzDO MCP Manager v2: an MCP server for Azure DevOps (Server on-prem and Services)
+  plus a WPF tray app that manages connections/PATs, tool permissions and approvals.
+  - Platform: Windows 10/11 only, .NET 10. Everything runs as the normal user:
+    no admin rights, no UAC, no writes outside the user profile (%LOCALAPPDATA%, %APPDATA%, HKCU).
+  - Projects: AzdoMcp.Core, AzdoMcp.Server, AzdoMcp.Manager.Core (net10.0, testable on Linux),
+    AzdoMcp.Manager (net10.0-windows, WPF), tests/AzdoMcp.Tests.
+  - No new NuGet packages in Core/Server/Manager.Core without asking the owner.
+  - Secrets: PATs never in plain text on disk, in logs, in client configs, in tests or commits.
+    No real server URLs, PATs, names or customer data anywhere in the repo; use placeholders
+    such as https://azdo.example.local/DefaultCollection.
+  - UI reference: docs/ui-proposal/*.dc.html (German UI texts are authoritative).
+  - Artifacts in English; user-facing UI strings in German as in the UI proposal.
+
+rules:
+  specs:
+    - Quote German UI strings exactly as they appear in docs/ui-proposal.
+  tasks:
+    - Every task states how it is verified (test name, command or manual check).

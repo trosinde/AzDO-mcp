@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>AzDO MCP Manager – Tools &amp; Rechte</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#005FB8}a:hover{color:#003E92}
+.nav{display:flex;align-items:center;gap:12px;height:40px;padding:0 12px;border-radius:6px;color:#1B1B1B;text-decoration:none;font-size:14px;position:relative}
+.nav:hover{background:rgba(0,0,0,.04)}
+.navon{background:rgba(0,0,0,.06);font-weight:600}
+.bar{position:absolute;left:0;top:12px;width:3px;height:16px;border-radius:2px;background:#005FB8}
+.card{background:#FFFFFF;border:1px solid #E5E5E5;border-radius:8px}
+.mono{font-family:'Cascadia Mono',Consolas,ui-monospace,monospace;font-size:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 14px;border-radius:4px;border:1px solid #D1D1D1;border-bottom-color:#BDBDBD;background:#FBFBFB;color:#1B1B1B;font:400 14px 'Segoe UI Variable','Segoe UI',sans-serif;cursor:pointer;text-decoration:none;white-space:nowrap;flex-shrink:0}
+.btnp{background:#005FB8;border-color:#005FB8;color:#FFFFFF}
+.cap{width:46px;height:32px;display:inline-flex;align-items:center;justify-content:center;border:none;background:transparent;color:#1B1B1B;cursor:pointer}
+.th{font-size:12px;font-weight:600;color:#5C5C5C;text-align:left;padding:7px 12px;border-bottom:1px solid #E5E5E5;white-space:nowrap}
+.td{font-size:13px;padding:5px 12px;border-bottom:1px solid #F0F0F0;vertical-align:middle;height:30px}
+.l1{background:#FFFFFF}.l2{background:#FAFAFA}.l3{background:#F4F7FB}.l4{background:#F8FAFD}
+.seg{display:inline-flex;border:1px solid #D1D1D1;border-radius:4px;overflow:hidden;white-space:nowrap}
+.sb{height:24px;padding:0 9px;border:none;border-right:1px solid #D1D1D1;background:#FFFFFF;font:400 12.5px 'Segoe UI Variable','Segoe UI',sans-serif;color:#1B1B1B;cursor:pointer}
+.sb:last-child{border-right:none}
+.sg{background:#107C10;color:#FFFFFF;font-weight:600}
+.sy{background:#F7D44A;color:#1B1B1B;font-weight:600}
+.sr{background:#C42B1C;color:#FFFFFF;font-weight:600}
+.inh .sg,.inh .sy,.inh .sr{opacity:.55}
+.pill{display:inline-flex;align-items:center;gap:6px;height:20px;padding:0 8px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.g{background:#DFF6DD;color:#0E5C0E}.y{background:#FFF4CE;color:#6B4E00}.r{background:#FDE7E9;color:#A4262C}.n{background:#F0F0F0;color:#4D4D4D}
+.lvl{font-size:11px;color:#5C5C5C;text-transform:uppercase;letter-spacing:.04em;margin-right:6px}
+.tw{display:inline-block;width:12px;color:#5C5C5C}
+.fn{font-size:11.5px;color:#5C5C5C;line-height:1.45}
+.hint{font-size:12px;color:#5C5C5C}
+</style>
+</helmet>
+<div style="width: 1120px; height: 740px; box-sizing: border-box; font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif; color: #1B1B1B; background: #F3F3F3; border: 1px solid #CFCFCF; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column">
+
+  <div style="height: 32px; display: flex; align-items: center; gap: 10px; padding-left: 14px; flex-shrink: 0">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#005FB8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 17.5h7M17.5 14v7"/></svg>
+    <span style="font-size: 12px">AzDO MCP Manager</span>
+    <div style="flex-grow: 1"></div>
+    <button class="cap" type="button" aria-label="Minimieren"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 5h10" stroke="currentColor"/></svg></button>
+    <button class="cap" type="button" aria-label="Maximieren"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor"/></svg></button>
+    <button class="cap" type="button" aria-label="In den Infobereich schliessen"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor"/></svg></button>
+  </div>
+
+  <div style="flex: 1 1 auto; display: flex; min-height: 0">
+    <nav aria-label="Navigation" style="width: 232px; flex-shrink: 0; padding: 6px 8px 12px; display: flex; flex-direction: column; gap: 2px; box-sizing: border-box">
+      <a class="nav" href="Main.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>Übersicht</a>
+      <a class="nav" href="Verbindung.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/></svg>Verbindungen &amp; PATs</a>
+      <a class="nav" href="Clients.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8"/></svg>MCP-Clients</a>
+      <a class="nav navon" href="Tools.dc.html" aria-current="page"><span class="bar"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>Tools &amp; Rechte</a>
+      <a class="nav" href="Protokoll.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Protokoll</a>
+      <div style="flex-grow: 1"></div>
+      <div style="padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: #5C5C5C"><span>Benutzer-Installation · ohne Admin</span><span>v2.0.0 · Updates: aktuell</span></div>
+    </nav>
+
+    <main style="flex: 1 1 auto; min-width: 0; background: #F9F9F9; border-top: 1px solid #E5E5E5; border-left: 1px solid #E5E5E5; border-top-left-radius: 8px; padding: 18px 28px 12px; display: flex; flex-direction: column; gap: 10px; overflow: hidden">
+      <header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 3px">
+          <h1 style="margin: 0; font-size: 26px; font-weight: 600">Tools &amp; Rechte</h1>
+          <span style="font-size: 13px; color: #5C5C5C">Ebenen: <strong>Gruppe → Tool → Verbindung → Projekt</strong>. Die tiefste gesetzte Ebene gilt; Schreibschalter und effektives Recht² begrenzen immer.</span>
+        </div>
+        <button class="btn btnp" type="button">Speichern</button>
+      </header>
+
+      <section class="card" aria-label="Rechte-Hierarchie" style="overflow: hidden">
+        <table style="width: 100%; border-collapse: collapse">
+          <thead><tr><th class="th">Ebene</th><th class="th">Modus¹</th><th class="th">Effektives Recht²</th><th class="th">Hinweis</th></tr></thead>
+          <tbody>
+            <tr class="l1"><td class="td"><span class="tw">▸</span><span class="lvl">Gruppe</span><strong>Work Items lesen</strong></td>
+              <td class="td"><div class="seg" role="group" aria-label="Modus Work Items lesen"><button class="sb sg" type="button" aria-pressed="true">Erlaubt</button><button class="sb" type="button">Nachfragen</button><button class="sb" type="button">Gesperrt</button></div></td>
+              <td class="td"><span class="hint">5 Projekte lesbar</span></td><td class="td hint">7 Tools</td></tr>
+            <tr class="l1"><td class="td"><span class="tw">▾</span><span class="lvl">Gruppe</span><strong>Work Items schreiben</strong></td>
+              <td class="td"><div class="seg" role="group" aria-label="Modus Work Items schreiben"><button class="sb" type="button">Erlaubt</button><button class="sb sy" type="button" aria-pressed="true">Nachfragen</button><button class="sb" type="button">Gesperrt</button></div></td>
+              <td class="td"></td><td class="td hint">6 Tools</td></tr>
+            <tr class="l2"><td class="td" style="padding-left: 30px"><span class="tw">▾</span><span class="lvl">Tool</span><span class="mono">update_work_item</span></td>
+              <td class="td"><div class="seg inh" role="group" aria-label="Modus update_work_item"><button class="sb" type="button">Erlaubt</button><button class="sb sy" type="button" aria-pressed="true">Nachfragen</button><button class="sb" type="button">Gesperrt</button></div></td>
+              <td class="td"></td><td class="td hint">wie Gruppe</td></tr>
+            <tr class="l3"><td class="td" style="padding-left: 50px"><span class="tw">▾</span><span class="lvl">Verbindung</span><strong>azdo-server</strong> <span class="hint">/ DefaultCollection</span></td>
+              <td class="td"><div class="seg inh" role="group" aria-label="Modus Verbindung azdo-server"><button class="sb" type="button">Erlaubt</button><button class="sb sy" type="button" aria-pressed="true">Nachfragen</button><button class="sb" type="button">Gesperrt</button></div></td>
+              <td class="td"><span class="hint">PAT³:</span> <span class="pill g">Schreiben</span></td><td class="td hint">wie Tool</td></tr>
+            <tr class="l4"><td class="td" style="padding-left: 74px"><span class="lvl">Projekt</span>SHOP</td>
+              <td class="td"><div class="seg inh" role="group" aria-label="Modus Projekt SHOP"><button class="sb" type="button">Erlaubt</button><button class="sb sy" type="button" aria-pressed="true">Nachfragen</button><button class="sb" type="button">Gesperrt</button></div></td>
+              <td class="td"><span class="pill g">Schreiben</span></td><td class="td hint">wie Verbindung</td></tr>
+            <tr class="l4"><td class="td" style="padding-left: 74px"><span class="lvl">Projekt</span>Musterlab</td>
+              <td class="td"><div class="seg" role="group" aria-label="Modus Projekt Musterlab"><button class="sb sg" type="button" aria-pressed="true">Erlaubt</button><button class="sb" type="button">Nachfragen</button><button class="sb" type="button">Gesperrt</button></div></td>
+              <td class="td"><span class="pill g">Schreiben</span></td><td class="td" style="color: #0E5C0E; font-size: 12px; font-weight: 600">Ausnahme</td></tr>
+            <tr class="l4"><td class="td" style="padding-left: 74px"><span class="lvl">Projekt</span>OPS</td>
+              <td class="td"><div class="seg" role="group" aria-label="Modus Projekt OPS"><button class="sb" type="button">Erlaubt</button><button class="sb" type="button">Nachfragen</button><button class="sb sr" type="button" aria-pressed="true">Gesperrt</button></div></td>
+              <td class="td"><span class="pill y">nur Lesen</span></td><td class="td" style="color: #A4262C; font-size: 12px; font-weight: 600">Ausnahme · kein Schreibrecht</td></tr>
+            <tr class="l4"><td class="td" style="padding-left: 74px"><span class="lvl">Projekt</span>Musterlab-Firmware <span class="pill g" style="margin-left: 4px">neu</span></td>
+              <td class="td"><label style="display: flex; align-items: center; gap: 6px; font-size: 12.5px"><input type="checkbox" style="width: 16px; height: 16px; margin: 0">Schreibschalter</label></td>
+              <td class="td"><span class="pill y">nur Lesen</span></td><td class="td hint">Voreinstellung</td></tr>
+            <tr class="l2"><td class="td" style="padding-left: 30px"><span class="tw">▸</span><span class="lvl">Tool</span>4 weitere Schreib-Tools</td>
+              <td class="td"><div class="seg inh" role="group" aria-label="Modus übrige Schreib-Tools"><button class="sb" type="button">Erlaubt</button><button class="sb sy" type="button" aria-pressed="true">Nachfragen</button><button class="sb" type="button">Gesperrt</button></div></td>
+              <td class="td"></td><td class="td hint">wie Gruppe · 1 Ausnahme</td></tr>
+            <tr class="l1"><td class="td"><span class="tw">▸</span><span class="lvl">Gruppe</span><strong>Git</strong></td>
+              <td class="td"><div class="seg" role="group" aria-label="Modus Git"><button class="sb sg" type="button" aria-pressed="true">Erlaubt</button><button class="sb" type="button">Nachfragen</button><button class="sb" type="button">Gesperrt</button></div></td>
+              <td class="td"><span class="hint">PAT³:</span> <span class="pill y">nur Lesen</span></td><td class="td hint">3 Tools</td></tr>
+            <tr class="l1"><td class="td"><span class="tw">▸</span><span class="lvl">Gruppe</span><strong>Test</strong></td>
+              <td class="td"><div class="seg" role="group" aria-label="Modus Test"><button class="sb sg" type="button" aria-pressed="true">Erlaubt</button><button class="sb" type="button">Nachfragen</button><button class="sb" type="button">Gesperrt</button></div></td>
+              <td class="td"><span class="pill r">kein Zugriff</span> <span class="hint">in 2 Projekten</span></td><td class="td hint">2 Tools</td></tr>
+            <tr class="l1"><td class="td" style="border-bottom: none"><span class="tw">▸</span><span class="lvl">Gruppe</span><strong>Planung</strong></td>
+              <td class="td" style="border-bottom: none"><div class="seg" role="group" aria-label="Modus Planung"><button class="sb sg" type="button" aria-pressed="true">Erlaubt</button><button class="sb" type="button">Nachfragen</button><button class="sb" type="button">Gesperrt</button></div></td>
+              <td class="td" style="border-bottom: none"></td><td class="td hint" style="border-bottom: none">2 Tools</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <div class="fn">
+        ¹ <strong style="color: #0E5C0E">Erlaubt</strong> = KI führt sofort aus · <strong style="color: #6B4E00">Nachfragen</strong> = Freigabe-Fenster mit Erlauben/Ablehnen, ohne Antwort nach 2 min abgelehnt · <strong style="color: #A4262C">Gesperrt</strong> = Tool wird nicht angeboten. Blasser Modus = geerbt von der Ebene darüber.<br>
+        ² Effektives Recht (Ampel: <strong style="color: #0E5C0E">Grün</strong> = Schreiben, <strong style="color: #6B4E00">Gelb</strong> = nur Lesen, <strong style="color: #A4262C">Rot</strong> = kein Zugriff) = kleinerer Wert aus PAT-Scope und deinen Projektrechten in Azure DevOps. Ein Modus hier kann es nur einschränken; «Erlaubt» bei Gelb bleibt Lesen.<br>
+        ³ PAT-Scope = die beim Erstellen des PAT freigegebenen Bereiche; gilt für alle Projekte der Verbindung.
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1120,"height":740}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

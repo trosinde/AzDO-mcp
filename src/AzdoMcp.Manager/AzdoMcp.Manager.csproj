@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>AzdoMcp.Manager</AssemblyName>
+    <RootNamespace>AzdoMcp.Manager</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- Own Main (Program.cs) so Velopack runs before WPF starts. -->
+    <StartupObject>AzdoMcp.Manager.Program</StartupObject>
+    <!-- WPF0001: ThemeMode (Fluent) is marked experimental. -->
+    <NoWarn>$(NoWarn);WPF0001</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- WPF and WinForms both define Application, MessageBox, ...; keep WPF's. -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+    <Using Include="System.IO" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Velopack" />
+    <ProjectReference Include="..\AzdoMcp.Core\AzdoMcp.Core.csproj" />
+    <ProjectReference Include="..\AzdoMcp.Manager.Core\AzdoMcp.Manager.Core.csproj" />
+    <!-- azdo-mcp.exe is shipped next to the Manager. -->
+    <ProjectReference Include="..\AzdoMcp.Server\AzdoMcp.Server.csproj" />
+  </ItemGroup>
+</Project>

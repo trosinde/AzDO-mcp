@@ -1,0 +1,12 @@
+bin/
+obj/
+artifacts/
+*.user
+*.suo
+.vs/
+.idea/
+TestResults/
+*.binlog
+# never commit configs with secrets
+config.json
+*.pat

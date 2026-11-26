@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <Version Condition="'$(Version)' == ''">2.0.0</Version>
+    <Authors>AzdoMcp</Authors>
+    <Product>AzDO MCP Manager</Product>
+  </PropertyGroup>
+</Project>
