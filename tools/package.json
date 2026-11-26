@@ -1,0 +1,12 @@
+{
+  "name": "azdo-mcp-tools",
+  "private": true,
+  "description": "Developer tools for AzDO MCP Manager (not shipped, not used in CI).",
+  "type": "module",
+  "scripts": {
+    "render-images": "node render-images.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.65.1"
+  }
+}
