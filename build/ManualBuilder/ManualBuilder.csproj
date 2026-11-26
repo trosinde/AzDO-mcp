@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Build tool (OpenSpec change add-release-and-manual, D7): docs/manual/*.md -> one printable HTML;
+       build/Build-Manual.ps1 prints it to PDF with Edge. Not part of AzdoMcp.sln and not shipped. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- A plain console tool: runs on Windows and Linux, not part of the product. -->
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <AssemblyTitle>AzdoMcp ManualBuilder</AssemblyTitle>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Version pinned centrally in Directory.Packages.props. -->
+    <PackageReference Include="Markdig" />
+  </ItemGroup>
+
+</Project>
